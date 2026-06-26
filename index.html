@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PV-Nachweis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root, [data-theme="light"] {
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --color-bg: #f7f6f2;
+      --color-surface: #f9f8f5;
+      --color-surface-2: #fbfbf9;
+      --color-border: #d4d1ca;
+      --color-text: #28251d;
+      --color-text-muted: #7a7974;
+      --color-primary: #01696f;
+      --color-primary-hover: #0c4e54;
+      --color-primary-highlight: #cedcd8;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --shadow-md: 0 4px 12px rgba(30, 25, 18, 0.08);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Work Sans', Arial, sans-serif;
+    }
+    [data-theme="dark"] {
+      --color-bg: #171614;
+      --color-surface: #1c1b19;
+      --color-surface-2: #201f1d;
+      --color-border: #393836;
+      --color-text: #cdccca;
+      --color-text-muted: #979591;
+      --color-primary: #4f98a3;
+      --color-primary-hover: #227f8b;
+      --color-primary-highlight: #313b3b;
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.28);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.6;
+      color: var(--color-text);
+      background: linear-gradient(180deg, var(--color-bg), var(--color-surface));
+    }
+    a, button { transition: all 180ms ease; }
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      background: var(--color-primary);
+      color: white;
+      padding: var(--space-3) var(--space-4);
+      z-index: 100;
+    }
+    .skip-link:focus { left: var(--space-4); top: var(--space-4); }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: color-mix(in srgb, var(--color-bg) 84%, transparent);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .topbar-inner, .container {
+      width: min(1100px, calc(100% - 2rem));
+      margin: 0 auto;
+    }
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) 0;
+      gap: var(--space-4);
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .brand svg { width: 34px; height: 34px; }
+    .theme-toggle {
+      min-width: 44px;
+      min-height: 44px;
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+      background: var(--color-surface-2);
+      color: var(--color-text);
+      display: inline-grid;
+      place-items: center;
+      cursor: pointer;
+    }
+    .hero {
+      padding: clamp(3rem, 8vw, 7rem) 0 var(--space-16);
+    }
+    .eyebrow {
+      display: inline-block;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      background: var(--color-primary-highlight);
+      color: var(--color-primary);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      margin-bottom: var(--space-6);
+    }
+    h1, h2 { font-family: var(--font-display); line-height: 1.1; margin: 0; }
+    h1 { font-size: var(--text-2xl); max-width: 12ch; margin-bottom: var(--space-6); }
+    h2 { font-size: var(--text-xl); margin-bottom: var(--space-4); }
+    p { margin: 0; max-width: 70ch; }
+    .lead { font-size: var(--text-lg); color: var(--color-text-muted); max-width: 52ch; }
+    .hero-grid, .info-grid {
+      display: grid;
+      gap: var(--space-8);
+      align-items: start;
+    }
+    .hero-card, .card {
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+    }
+    .hero-card { padding: var(--space-8); }
+    .stats {
+      display: grid;
+      gap: var(--space-4);
+      margin-top: var(--space-6);
+    }
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+    }
+    .stat strong { font-size: var(--text-lg); }
+    section { padding: 0 0 var(--space-16); }
+    .info-grid { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .card { padding: var(--space-8); }
+    .calc {
+      display: grid;
+      gap: var(--space-4);
+      margin-top: var(--space-6);
+      padding: var(--space-6);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+    }
+    .formula {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+    .notice {
+      border-left: 4px solid var(--color-primary);
+      padding-left: var(--space-4);
+      color: var(--color-text-muted);
+      margin-top: var(--space-4);
+    }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      margin-top: var(--space-8);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0.85rem 1.2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      border: 1px solid var(--color-border);
+    }
+    .btn-primary {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+    .btn-primary:hover { background: var(--color-primary-hover); }
+    .btn-secondary {
+      background: var(--color-surface-2);
+      color: var(--color-text);
+    }
+    footer {
+      padding: var(--space-8) 0 var(--space-12);
+      color: var(--color-text-muted);
+      border-top: 1px solid var(--color-border);
+    }
+    @media (min-width: 900px) {
+      .hero-grid { grid-template-columns: 1.2fr 0.8fr; }
+      .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <a href="#inhalt" class="skip-link">Zum Inhalt springen</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand" aria-label="PV Nachweis">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo">
+          <rect x="8" y="24" width="28" height="24" rx="4" stroke="currentColor" stroke-width="3"/>
+          <path d="M14 30H30M14 36H30M14 42H30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          <path d="M44 18V10M44 54V46M58 32H50M38 32H30M53.9 22.1L48.2 27.8M39.8 36.2L34.1 41.9M53.9 41.9L48.2 36.2M39.8 27.8L34.1 22.1" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span>PV-Nachweis</span>
+      </div>
+      <button class="theme-toggle" data-theme-toggle aria-label="Darstellung wechseln">
+        <span aria-hidden="true">◐</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="inhalt">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">Sachliche Darstellung</span>
+          <h1>Strombedarf und PV-Leistung auf einen Blick</h1>
+          <p class="lead">Die Website zeigt übersichtlich, dass die angegebene Photovoltaikanlage mit 7,7 kW bei guten Wetterbedingungen den gleichzeitigen Bedarf von Haus und Klimaanlage rechnerisch abdecken kann.</p>
+          <div class="button-row">
+            <a class="btn btn-primary" href="#berechnung">Zur Berechnung</a>
+            <a class="btn btn-secondary" href="../pv_klimaanlage_bestaetigung.md" target="_blank" rel="noopener noreferrer">Dokument öffnen</a>
+          </div>
+        </div>
+        <aside class="hero-card" aria-labelledby="werte">
+          <h2 id="werte">Angegebene Werte</h2>
+          <div class="stats" role="list">
+            <div class="stat" role="listitem"><span>PV-Anlage</span><strong>7,7 kW</strong></div>
+            <div class="stat" role="listitem"><span>Hausverbrauch</span><strong>2,2 kW</strong></div>
+            <div class="stat" role="listitem"><span>Klimaanlage</span><strong>3,5 kW</strong></div>
+            <div class="stat" role="listitem"><span>Gesamtverbrauch</span><strong>5,7 kW</strong></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="berechnung">
+      <div class="container info-grid">
+        <article class="card">
+          <h2>Rechnerische Einordnung</h2>
+          <p>Der gemeinsame Verbrauch ergibt sich aus dem Hausverbrauch von 2,2 kW und der Spitzenleistung der Klimaanlage von 3,5 kW.</p>
+          <div class="calc">
+            <div class="formula">2,2 kW + 3,5 kW = 5,7 kW</div>
+            <p>Die verfügbare PV-Leistung von 7,7 kW liegt damit um 2,0 kW über dem angegebenen Gesamtverbrauch.</p>
+          </div>
+        </article>
+        <article class="card">
+          <h2>Ergebnis</h2>
+          <p>Bei guten Wetterbedingungen und entsprechender aktueller Solarerzeugung ist rechnerisch kein zusätzlicher Strombezug aus dem öffentlichen Netz erforderlich.</p>
+          <p class="notice">Die Darstellung bezieht sich ausdrücklich auf gute Wetterbedingungen und auf die angegebenen Leistungswerte. Abweichungen sind bei geringerer Sonneneinstrahlung oder anderem Verbrauch möglich.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>Erstellt zur sachlichen Weitergabe der angegebenen Leistungs- und Verbrauchswerte. Signatur: Perplexity.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const toggle = document.querySelector('[data-theme-toggle]');
+      const root = document.documentElement;
+      let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.setAttribute('data-theme', theme);
+      toggle.addEventListener('click', function () {
+        theme = theme === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', theme);
+      });
+    })();
+  </script>
+</body>
+</html>
